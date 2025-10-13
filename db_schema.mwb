@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE model SYSTEM "http://mysqlworkbench.org/schemas/mwb.dtd">
+<model version="1">
+  <tables>
+    <table name="comments_comment">
+      <columns>
+        <column name="id" type="INT" autoIncrement="true" primaryKey="true"/>
+        <column name="user_name" type="VARCHAR(255)"/>
+        <column name="email" type="VARCHAR(255)"/>
+        <column name="home_page" type="VARCHAR(255)"/>
+        <column name="text" type="TEXT"/>
+        <column name="parent_id" type="INT" foreignKey="comments_comment.id"/>
+        <column name="created_at" type="DATETIME"/>
+        <column name="image" type="VARCHAR(255)"/>
+        <column name="file" type="VARCHAR(255)"/>
+      </columns>
+    </table>
+  </tables>
+</model>
