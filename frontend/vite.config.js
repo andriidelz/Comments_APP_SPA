@@ -1,10 +1,19 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
   plugins: [vue()],
   server: {
     host: true,
-    port: 5173
-  }
-})
+    port: 5173,
+    watch: {
+      usePolling: true,  
+      interval: 500,     
+    },
+    hmr: {
+      host: 'localhost', 
+      port: 5173,
+      clientPort: 5173,  
+    },
+  },
+});

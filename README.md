@@ -28,6 +28,40 @@ This is a test task for a comments system SPA.
 6. Create superuser: `docker exec -it backend python manage.py createsuperuser`
 7. For CAPTCHA, run `docker exec -it backend python manage.py migrate captcha`
 
+## Create Superuser
+
+docker-compose exec backend python manage.py createsuperuser:
+
+- username
+- e-mail
+- password
+
+## Migrations
+
+They are done automatically but there are few commands below anyway:
+
+- docker-compose exec backend python manage.py migrate
+- docker-compose exec backend python manage.py shell
+- docker-compose exec backend python manage.py makemigrations
+
+## Token
+
+To get it:
+
+- curl -X POST <http://localhost:8000/api/token/> \
+     -H "Content-Type: application/json" \
+     -d '{"username":"user","password":"qwerty123"}' - for example
+
+## Getting and creating comments
+
+- curl -X GET <http://localhost:8000/api/comments/> \
+       -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+- curl -X POST <http://localhost:8000/api/comments/> \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+     -H "Content-Type: application/json" \
+     -d '{"text": "Hello from curl!"}'
+
 ## DB Schema
 
 Open db_schema.mwb in MySQL Workbench.

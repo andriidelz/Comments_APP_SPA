@@ -3,28 +3,31 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import CommentItem from './CommentItem.vue'
 import CommentForm from './CommentForm.vue'
+import { connectWS, onMessage } from './ws'
 
 const API_URL = import.meta.env.VITE_API_URL
-
 const comments = ref([])
 const page = ref(1)
 const sortBy = ref('-created_at')
 const token = localStorage.getItem('access_token')
-const ws = ref(null)
 
-onMounted(async () => {
-  loadComments()
+// const ws = ref(null)
 
-if (token && API_URL) { 
-  ws.value = new WebSocket(`${API_URL.replace('http', 'ws')}/ws/comments/?token=${token}`)
-  ws.value.onmessage = (event) => {
-    const data = JSON.parse(event.data)
-    comments.value.unshift(data.message)
-  }
-  ws.value.onclose = () => console.log('WebSocket closed')
-  ws.value.onerror = (error) => console.error('WebSocket error:', error)
-  }
-})
+// onMounted(async () => {
+//   loadComments()
+
+// if (token && API_URL) { 
+//   const wsUrl = API_URL.replace(/^http/, 'ws') + `/ws/comments/?token=${token}`
+//   ws.value = new WebSocket(wsUrl) 
+
+//   ws.value.onmessage = (event) => {
+//     const data = JSON.parse(event.data)
+//     comments.value.unshift(data.message)
+//   }
+//   ws.value.onclose = () => console.log('WebSocket closed')
+//   ws.value.onerror = (error) => console.error('WebSocket error:', error)
+//   }
+// })
 
 const loadComments = async () => {
   try {
@@ -40,10 +43,26 @@ const loadComments = async () => {
     console.error('Failed to load comments:', error.response?.data || error.message)
   }
 }
+const changeSort = () => {
+  page.value = 1
+  loadComments()
+}
+
+onMounted(async () => {
+  await loadComments()
+
+  if (token) {
+    connectWS(token)
+    onMessage((newComment) => {
+      comments.value.unshift(newComment)
+    })
+  }
+})
+
 </script>
 
 <template>
-  <select v-model="sortBy" @change="loadComments">
+  <select v-model="sortBy" @change="changeSort">
     <option value="-created_at">Date Desc</option>
     <option value="created_at">Date Asc</option>
     <option value="user_name">User Asc</option>

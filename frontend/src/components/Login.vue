@@ -26,6 +26,13 @@ async function login() {
     router.push('/comments')
   } catch (error) {
     loginError.value = error.response?.data?.detail || 'Login failed'
+    if (error.response) {
+    loginError.value = error.response.data.detail || 'Login failed'
+    } else if (error.request) {
+    loginError.value = 'No response from server'
+    } else {
+    loginError.value = error.message
+  }
     console.error('Login failed:', error.response?.data || error.message)
   }
 }
