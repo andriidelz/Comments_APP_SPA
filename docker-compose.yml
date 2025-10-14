@@ -32,6 +32,7 @@ services:
       - redis
     environment:
       RUN_MAIN: "true"
+      WAIT_FOR_REDIS: "true"
       POSTGRES_DB: comments_db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -49,6 +50,8 @@ services:
       - redis
       - db
     environment:
+      RUN_CELERY: "true"
+      WAIT_FOR_REDIS: "true"
       POSTGRES_DB: comments_db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass

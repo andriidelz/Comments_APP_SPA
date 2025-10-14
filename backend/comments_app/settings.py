@@ -3,9 +3,9 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+SECRET_KEY = os.environ.get("SECRET_KEY", "super-secret-key")
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = ['*']
 
@@ -107,6 +107,11 @@ CAPTCHA_LENGTH = 6
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  
+]
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -115,14 +120,14 @@ CACHES = {
     }
 }
     
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://redis:6379/0")
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('localhost', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }

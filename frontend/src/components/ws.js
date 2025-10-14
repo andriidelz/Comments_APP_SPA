@@ -1,5 +1,3 @@
-//  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYwNDMzMTI0LCJpYXQiOjE3NjA0MzI4MjQsImp0aSI6IjZiOGNiM2U2MTgzNTRjZTA4OWU5YTA4NjRlZDZjOWVjIiwidXNlcl9pZCI6MX0.ytXvTdXmCAGstOiggdH6NOEC2NY2ialHGOjWFPLnXgM";
-
 let socket = null;
 
 export const connectWS = (token) => {
