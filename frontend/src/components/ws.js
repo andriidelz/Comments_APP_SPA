@@ -3,7 +3,9 @@ let socket = null;
 export const connectWS = (token) => {
   if (socket) return socket;
 
-  const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
+  // const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
+  const API_URL = import.meta.env.VITE_API_URL
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const wsUrl = API_URL.replace(/^http/, 'ws') + `/ws/comments/?token=${token}`;
   socket = new WebSocket(wsUrl);
 

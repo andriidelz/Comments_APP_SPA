@@ -2,13 +2,13 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Comment
 from .serializers import CommentSerializer
+
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-# from captcha import captcha_check
 from rest_framework import status
-from .forms import CommentCaptchaForm
 
+from .forms import CommentCaptchaForm
 from captcha.models import CaptchaStore
 from rest_framework.decorators import api_view
 

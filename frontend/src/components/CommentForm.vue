@@ -8,9 +8,6 @@ import PreviewModal from './PreviewModal.vue'
 import { useRouter } from 'vue-router'
 import { sendMessage, connectWS } from "./ws";
 
-// const API_URL = '/api';
-// const BACKEND_URL = '/api';
-
 const API_URL = import.meta.env.VITE_API_URL
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 

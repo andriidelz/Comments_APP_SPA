@@ -1,6 +1,6 @@
 from django import forms
 from captcha.fields import CaptchaField
-from .serializers import CommentSerializer  # Import your serializer
+from .serializers import CommentSerializer  
 
 class CommentCaptchaForm(forms.Form):
     captcha = CaptchaField()

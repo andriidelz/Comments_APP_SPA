@@ -10,5 +10,3 @@ axios.defaults.timeout = 5000 // 5 seconds
 const app = createApp(App)
 app.use(router)
 app.mount('#app')
-
-// createApp(App).use(router).mount('#app')

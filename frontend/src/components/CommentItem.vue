@@ -8,7 +8,6 @@ defineProps(['comment'])
     <div v-html="comment.text"></div>
     <a v-if="comment.image" :href="comment.image" data-lightbox="image">View Image</a>
     <a v-if="comment.file" :href="comment.file">Download File</a>
-    <!-- Nested replies -->
     <CommentItem v-for="child in comment.children" :key="child.id" :comment="child" />
   </div>
 </template>

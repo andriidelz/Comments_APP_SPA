@@ -1,7 +1,5 @@
 from django.urls import path
 from .views import CommentListCreateView, generate_captcha_key
-
-# from django.views.generic import TemplateView
 from captcha.views import captcha_image
 
 urlpatterns = [

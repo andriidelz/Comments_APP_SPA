@@ -6,6 +6,7 @@ import CommentForm from './CommentForm.vue'
 import { connectWS, onMessage } from './ws'
 
 const API_URL = import.meta.env.VITE_API_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const comments = ref([])
 const page = ref(1)
 const sortBy = ref('-created_at')

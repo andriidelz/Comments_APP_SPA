@@ -10,7 +10,8 @@ const loginForm = ref({
 })
 const loginError = ref('')
 
-const API_URL = import.meta.env.VITE_API_URL  
+const API_URL = import.meta.env.VITE_API_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL  
 
 async function login() {
   try {
