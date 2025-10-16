@@ -7,7 +7,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "super-secret-key")
 
 DEBUG = os.environ.get("DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'mptt',
     'comments',
     'channels',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -35,6 +36,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 ROOT_URLCONF = 'comments_app.urls'
 

@@ -10,6 +10,10 @@ export default defineConfig({
       usePolling: true,  
       interval: 500,     
     },
+    proxy: {
+      '/api': 'http://backend:8000',
+      '/captcha': 'http://backend:8000'
+    },
     hmr: {
       host: 'localhost', 
       port: 5173,

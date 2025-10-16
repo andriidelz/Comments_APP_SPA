@@ -20,7 +20,7 @@ def generate_captcha_key(request):
 class CommentListCreateView(generics.ListCreateAPIView):
     queryset = Comment.objects.filter(parent=None).order_by('-created_at')
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]  # JWT required
+    permission_classes = [IsAuthenticated]  
 
     def get_queryset(self):
         queryset = Comment.objects.filter(parent=None)
@@ -29,31 +29,28 @@ class CommentListCreateView(generics.ListCreateAPIView):
             queryset = queryset.order_by(sort_by)
         return queryset
 
-    @method_decorator(cache_page(60 * 5))  # Cache for 5 min
+    @method_decorator(cache_page(60 * 5))  
     def list(self, request, *args, **kwargs):
         page = request.query_params.get('page', 1)
         queryset = self.get_queryset()[(int(page)-1)*25:int(page)*25]
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    # @captcha_check('captcha')
     def create(self, request, *args, **kwargs):
         if 'file' in request.FILES:
             file = request.FILES['file']
             if file.size > 100 * 1024 or not file.name.endswith('.txt'):
                 return Response({'error': 'Invalid file'}, status=status.HTTP_400_BAD_REQUEST)
             
-    # Validate CAPTCHA using form
         form = CommentCaptchaForm(request.POST, request_data=request.data)
         if not form.is_valid():
             errors = {}
             if form.errors.get('captcha'):
-                errors['captcha'] = [form.errors['captcha'][0]]  # Extract CAPTCHA error
-            if not form.serializer.is_valid():  # Add serializer errors
+                errors['captcha'] = [form.errors['captcha'][0]]  
+            if not form.serializer.is_valid():  
                 errors.update(form.serializer.errors)
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
         
-        # CAPTCHA and data valid; save via serializer
         serializer = form.serializer
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)

@@ -8,7 +8,12 @@ import PreviewModal from './PreviewModal.vue'
 import { useRouter } from 'vue-router'
 import { sendMessage, connectWS } from "./ws";
 
+// const API_URL = '/api';
+// const BACKEND_URL = '/api';
+
 const API_URL = import.meta.env.VITE_API_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 const router = useRouter() 
 
 const form = ref({
@@ -31,7 +36,6 @@ const captchaKey = ref('')
 const captchaImage = ref('')
 const isAuthenticated = ref(!!localStorage.getItem('access_token'))
 const loginError = ref('') 
-
 const showPreview = ref(false)
 
 const rules = {
@@ -46,12 +50,13 @@ const v$ = useVuelidate(rules, form)
 
 const fetchCaptcha = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/captcha/key/`, {
+    const response = await axios.get(`${BACKEND_URL}/api/captcha/key/`,{
       headers: { 'Content-Type': 'application/json' }
     })
+    console.log('CAPTCHA Key Response:', response.data);
     const data = response.data // axios automatically parses JSON
-    captchaKey.value = data.key
-    captchaImage.value = `${API_URL}/api/captcha/image/${data.key}/`
+    captchaKey.value = response.data.key
+    captchaImage.value = `${BACKEND_URL}/api/captcha/image/${captchaKey.value}/`
   } catch (error) {
     console.error('Failed to fetch CAPTCHA:', error.response?.data || error.message)
   }
@@ -104,12 +109,13 @@ const submit = async () => {
 
     try {
       const token = localStorage.getItem('access_token')
-      const response = await axios.post(`${API_URL}/api/comments/`, formData, {
+      const response = await axios.post(`${API_URL}/comments/`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
-      })
+      });
+      console.log('Submission successful:', response.data);
 
       const wsInstance = connectWS(token)
       if (wsInstance.readyState === WebSocket.OPEN) {

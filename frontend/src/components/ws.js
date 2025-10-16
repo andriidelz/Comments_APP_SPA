@@ -1,9 +1,11 @@
 let socket = null;
 
 export const connectWS = (token) => {
-  if (socket) return socket; // already connected
+  if (socket) return socket;
 
-  socket = new WebSocket(`ws://localhost:8000/ws/comments/?token=${token}`);
+  const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:8000';
+  const wsUrl = API_URL.replace(/^http/, 'ws') + `/ws/comments/?token=${token}`;
+  socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
     console.log("WebSocket connected!");

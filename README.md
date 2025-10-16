@@ -22,7 +22,7 @@ This is a test task for a comments system SPA.
 
 1. Install Docker.
 2. Run `docker-compose up --build`.
-3. Backend at <http://localhost:8000/api/comments/>
+3. Backend at <http://localhost:8000/admin/>
 4. Frontend at <http://localhost:5173/>
 5. Migrate DB: `docker exec -it backend python manage.py migrate`
 6. Create superuser: `docker exec -it backend python manage.py createsuperuser`
