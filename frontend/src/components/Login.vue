@@ -1,39 +1,32 @@
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
+import { ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const { proxy } = getCurrentInstance()
+
 const loginForm = ref({
   username: '',
   password: ''
 })
 const loginError = ref('')
 
-const API_URL = import.meta.env.VITE_API_URL
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL  
-
 async function login() {
   try {
-    const response = await axios.post(`${API_URL}/api/token/`, {
+    const response = await proxy.$api.post('/token/', {
       username: loginForm.value.username,
       password: loginForm.value.password
     })
-    localStorage.setItem('access_token', response.data.access)
-    localStorage.setItem('refresh_token', response.data.refresh)
+
     loginError.value = ''
     loginForm.value.username = ''
     loginForm.value.password = ''
+
     router.push('/comments')
   } catch (error) {
-    loginError.value = error.response?.data?.detail || 'Login failed'
-    if (error.response) {
-    loginError.value = error.response.data.detail || 'Login failed'
-    } else if (error.request) {
-    loginError.value = 'No response from server'
-    } else {
-    loginError.value = error.message
-  }
+    loginError.value =
+      error.response?.data?.detail ||
+      (error.request ? 'No response from server' : error.message)
     console.error('Login failed:', error.response?.data || error.message)
   }
 }

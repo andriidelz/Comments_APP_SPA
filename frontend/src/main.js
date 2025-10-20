@@ -1,12 +1,27 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import axios from 'axios'
-// import 'lightbox2/dist/css/lightbox.min.css'
+import api from './utils/axios'
+import { autoLogin } from './utils/auth.js';
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-axios.defaults.timeout = 5000 // 5 seconds
+import 'lightbox2/dist/css/lightbox.min.css'
+import lightbox from 'lightbox2';
 
-const app = createApp(App)
-app.use(router)
-app.mount('#app')
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+
+
+autoLogin().then(() => {
+  const app = createApp(App);
+  app.use(router);
+  app.config.globalProperties.$api = api;
+  app.mount('#app');
+
+  lightbox.option({
+    resizeDuration: 200,
+    wrapAround: true
+  });
+
+  console.log("App initialized after auto-login");
+});

@@ -75,8 +75,8 @@ services:
       - backend
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - VITE_API_URL=http://backend:8000/api
-      - VITE_BACKEND_HOST=backend
+      - VITE_API_URL=http://localhost:8000/api
+      - VITE_BACKEND_HOST=localhost
     env_file:
       - ./frontend/.env
 

@@ -6,12 +6,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'comments_app.settings')
 django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+# from channels.auth import AuthMiddlewareStack
 from comments.routing import websocket_urlpatterns
+from comments.middleware import TokenAuthMiddleware
 
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
+    "http": django_asgi_app,
+    "websocket": TokenAuthMiddleware(
         URLRouter(websocket_urlpatterns)
     ),
 })

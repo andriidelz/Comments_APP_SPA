@@ -11,8 +11,10 @@ export default defineConfig({
       interval: 500,     
     },
     proxy: {
-      '/api': 'http://backend:8000',
-      '/captcha': 'http://backend:8000'
+      '/api': {
+        target: 'http://backend:8000',
+        changeOrigin: true,
+      },
     },
     hmr: {
       host: 'localhost', 

@@ -1,49 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
 import CommentItem from './CommentItem.vue'
 import CommentForm from './CommentForm.vue'
-import { connectWS, onMessage } from './ws'
+import { connectWS, onMessage, sendMessage, disconnectWS } from '../components/ws.js'
+import lightbox from 'lightbox2'
 
-const API_URL = import.meta.env.VITE_API_URL
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const { proxy } = getCurrentInstance() 
+
 const comments = ref([])
 const page = ref(1)
 const sortBy = ref('-created_at')
-const token = localStorage.getItem('access_token')
-
-// const ws = ref(null)
-
-// onMounted(async () => {
-//   loadComments()
-
-// if (token && API_URL) { 
-//   const wsUrl = API_URL.replace(/^http/, 'ws') + `/ws/comments/?token=${token}`
-//   ws.value = new WebSocket(wsUrl) 
-
-//   ws.value.onmessage = (event) => {
-//     const data = JSON.parse(event.data)
-//     comments.value.unshift(data.message)
-//   }
-//   ws.value.onclose = () => console.log('WebSocket closed')
-//   ws.value.onerror = (error) => console.error('WebSocket error:', error)
-//   }
-// })
 
 const loadComments = async () => {
   try {
-    const token = localStorage.getItem('access_token')
-    const res = await axios.get(`${API_URL}/api/comments/?page=${page.value}&sort_by=${sortBy.value}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const res = await proxy.$api.get(`/comments/?page=${page.value}&sort_by=${sortBy.value}`)
     comments.value = res.data
+    lightbox.reload() 
   } catch (error) {
     console.error('Failed to load comments:', error.response?.data || error.message)
   }
 }
+
 const changeSort = () => {
   page.value = 1
   loadComments()
@@ -52,27 +29,49 @@ const changeSort = () => {
 onMounted(async () => {
   await loadComments()
 
-  if (token) {
-    connectWS(token)
-    onMessage((newComment) => {
-      comments.value.unshift(newComment)
+  const socket = connectWS(proxy)
+  if (!socket) return
+
+  onMessage((newComment) => {
+    comments.value.unshift(newComment)
+
+    lightbox.option({
+      resizeDuration: 200,
+      wrapAround: true
     })
-  }
+  })
+})
+
+onUnmounted(() => {
+  disconnectWS()
 })
 
 </script>
 
 <template>
-  <select v-model="sortBy" @change="changeSort">
-    <option value="-created_at">Date Desc</option>
-    <option value="created_at">Date Asc</option>
-    <option value="user_name">User Asc</option>
-    <option value="-user_name">User Desc</option>
-    <option value="email">Email Asc</option>
-    <option value="-email">Email Desc</option>
-  </select>
-  <CommentItem v-for="comment in comments" :key="comment.id" :comment="comment" />
-  <button @click="page--; loadComments()" :disabled="page <= 1">Prev</button>
-  <button @click="page++; loadComments()">Next</button>
-  <CommentForm />
+  <div>
+    <select v-model="sortBy" @change="changeSort">
+      <option value="-created_at">Date Desc</option>
+      <option value="created_at">Date Asc</option>
+      <option value="user_name">User Asc</option>
+      <option value="-user_name">User Desc</option>
+      <option value="email">Email Asc</option>
+      <option value="-email">Email Desc</option>
+    </select>
+
+    <CommentItem v-for="comment in comments" :key="comment.id" :comment="comment" />
+    
+    <div class="pagination">
+      <button @click="page--; loadComments()" :disabled="page <= 1">Prev</button>
+      <button @click="page++; loadComments()">Next</button>
+    </div>
+
+    <CommentForm />
+  </div>
 </template>
+
+<style scoped>
+.pagination {
+  margin: 10px 0;
+}
+</style>
