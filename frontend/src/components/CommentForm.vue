@@ -28,7 +28,6 @@ const loginError = ref('')
 const showPreview = ref(false)
 const showPassword = ref(false)
 
-// --- WebSocket ---
 const wsInstance = ref(null)
 
 onMounted(async () => {

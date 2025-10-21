@@ -4,8 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-# from comments.views import generate_captcha_key
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('comments.urls')),

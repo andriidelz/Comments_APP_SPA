@@ -2,8 +2,7 @@ import { getAccessToken } from '../utils/auth.js';
 
 let socket = null;
 /**
- * Connecting to WebSocket with automatic token
- * @param {Object} proxy - Vue instance (for $api fallback)
+ * @param {Object} proxy
  */
 
 export const connectWS = (proxy) => {
@@ -34,9 +33,8 @@ export const connectWS = (proxy) => {
 };
 
 /**
- * Sending messages via WebSocket or fallback via HTTP
- * @param {Object} proxy - Vue instance (for $api fallback)
- * @param {Object} message - message's object
+ * @param {Object} proxy 
+ * @param {Object} message 
  */
 
 export const sendMessage = async (proxy, message) => {
@@ -55,8 +53,7 @@ export const sendMessage = async (proxy, message) => {
 };
 
 /**
- * Calculating incoming messages
- * @param {Function} callback - calculating datas
+ * @param {Function} callback
  */
 
 export const onMessage = (callback) => {
@@ -74,9 +71,6 @@ export const onMessage = (callback) => {
   };
 };
 
-/**
- * Close WebSocket
- */
 export const disconnectWS = () => {
   if (socket) {
     socket.close();

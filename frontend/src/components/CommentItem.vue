@@ -13,7 +13,6 @@ defineProps({
 
     <div v-html="comment.text"></div>
 
-    <!-- Lightbox Image -->
     <a 
       v-if="comment.image" 
       :href="comment.image" 
@@ -23,10 +22,8 @@ defineProps({
       <img :src="comment.image" alt="Comment Image" class="thumbnail">
     </a>
 
-    <!-- Downloadable file -->
     <a v-if="comment.file" :href="comment.file" download>Download File</a>
 
-    <!-- Recursive rendering of child comments -->
     <div class="child-comments" v-if="comment.children && comment.children.length">
       <CommentItem 
         v-for="child in comment.children" 
@@ -63,8 +60,6 @@ defineProps({
   transform: scale(1.05);
 }
 </style>
-
-
 
 <!-- <script setup>
 defineProps(['comment'])
