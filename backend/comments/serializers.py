@@ -8,6 +8,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def validate_text(self, value):
         import re
-        if re.search(r'<(?!/)\w+[^>]*>(?!.*</\1>)', value):
+        if re.search(r'<(?!/)(\w+)[^>]*>(?!.*</\1>)', value):
             raise serializers.ValidationError("Invalid HTML: tags not closed.")
         return value

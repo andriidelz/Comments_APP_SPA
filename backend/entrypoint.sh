@@ -17,5 +17,7 @@ if [ "$RUN_MAIN" = "true" ]; then
   python manage.py collectstatic --noinput
 fi
 
-echo "🚀 Starting Django server..."
-exec python manage.py runserver 0.0.0.0:8000
+exec "$@"
+
+# echo "🚀 Starting Django server..."
+# exec python manage.py runserver 0.0.0.0:8000

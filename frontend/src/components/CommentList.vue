@@ -15,7 +15,6 @@ const loadComments = async () => {
   try {
     const res = await proxy.$api.get(`/comments/?page=${page.value}&sort_by=${sortBy.value}`)
     comments.value = res.data
-    lightbox.reload() 
   } catch (error) {
     console.error('Failed to load comments:', error.response?.data || error.message)
   }
@@ -34,11 +33,6 @@ onMounted(async () => {
 
   onMessage((newComment) => {
     comments.value.unshift(newComment)
-
-    lightbox.option({
-      resizeDuration: 200,
-      wrapAround: true
-    })
   })
 })
 

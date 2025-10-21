@@ -1,16 +1,18 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { ref, onMounted, onBeforeUnmount, getCurrentInstance, watch } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, url, alphaNum, minLength } from '@vuelidate/validators'
 import { setTokens, getAccessToken } from '../utils/auth.js'
 import Toolbar from './Toolbar.vue'
 import PreviewModal from './PreviewModal.vue'
+import { connectWS } from '../components/ws.js'
 
 const { proxy } = getCurrentInstance()
+const emit = defineEmits(['comment-submitted'])
 
 const form = ref({
   user_name: '',
-  password: '',
+  // password: '',
   email: '',
   home_page: '',
   captcha: '',
@@ -26,19 +28,21 @@ const captchaImage = ref('')
 const isAuthenticated = ref(!!getAccessToken())
 const loginError = ref('')
 const showPreview = ref(false)
-const showPassword = ref(false)
+// const showPassword = ref(false)
 
 const wsInstance = ref(null)
 
 onMounted(async () => {
   await fetchCaptcha()
 
-  wsInstance.value = connectWS()
-  wsInstance.value.addEventListener('open', () => console.log('WebSocket connected'))
-  wsInstance.value.addEventListener('close', () => {
-    console.log('WebSocket closed, reconnecting...')
-    setTimeout(() => { wsInstance.value = connectWS() }, 1000)
-  })
+  wsInstance.value = connectWS(proxy)
+  if (wsInstance.value) {
+    wsInstance.value.addEventListener('open', () => console.log('WebSocket connected'))
+    wsInstance.value.addEventListener('close', () => {
+      console.log('WebSocket closed, reconnecting...')
+      setTimeout(() => { wsInstance.value = connectWS(proxy) }, 1000)
+    })
+  }
 })
 
 onBeforeUnmount(() => {
@@ -47,7 +51,7 @@ onBeforeUnmount(() => {
 
 const rules = {
   user_name: { required, alphaNum },
-  password: { required, minLength: minLength(6) },
+  // password: { required, minLength: minLength(6) },
   email: { required, email },
   home_page: { url },
   captcha: { required, alphaNum },
@@ -64,7 +68,7 @@ const fetchCaptcha = async () => {
     console.error('Failed to fetch CAPTCHA:', error.response?.data || error.message)
   }
 }
-onMounted(fetchCaptcha)
+// onMounted(fetchCaptcha)
 
 const login = async () => {
   try {

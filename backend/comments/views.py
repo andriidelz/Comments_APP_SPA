@@ -12,6 +12,9 @@ from .forms import CommentCaptchaForm
 from captcha.models import CaptchaStore
 from rest_framework.decorators import api_view
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 @api_view(['GET'])
 def generate_captcha_key(request):
     new_key = CaptchaStore.generate_key()
@@ -53,5 +56,16 @@ class CommentListCreateView(generics.ListCreateAPIView):
         
         serializer = form.serializer
         self.perform_create(serializer)
+        
+        # Broadcast to WS
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "comments",
+            {
+                "type": "comment.message",
+                "message": serializer.data
+            }
+        )
+        
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
