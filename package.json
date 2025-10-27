@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "jquery": "^3.7.1",
-    "lightbox2": "^2.11.5",
-    "vue": "^3.5.22"
-  }
-}

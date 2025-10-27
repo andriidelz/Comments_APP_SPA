@@ -2,30 +2,30 @@
 services:
   db:
     image: postgres:13
-    # container_name: comments_app_SPA_db
+    container_name: comments_app_SPA_db
     environment:
-      POSTGRES_DB: ${POSTGRES_DB} # comments_db
-      POSTGRES_USER: ${POSTGRES_USER} # user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # pass
-    #volumes:
-      #- postgres_data:/var/lib/postgresql/data
-    #ports:
-      #- "5432:5432"
+      POSTGRES_DB: comments_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   redis:
     image: redis:6
-    # container_name: comments_app_redis
-    # ports:
-    #   - "6379:6379"
+    container_name: comments_app_redis
+    ports:
+      - "6379:6379"
 
   backend:
     build: ./backend
-    # container_name: comments_app_SPA_backend
+    container_name: comments_app_SPA_backend
     command: ["/app/entrypoint.sh", "daphne", "-b", "0.0.0.0", "-p", "8000", "comments_app.asgi:application"]
     volumes:
       - ./backend:/app
       - ./backend/media:/app/media
-    # ports:
-      # - "8000:8000"
+    ports:
+      - "8000:8000"
     env_file:
       - ./backend/.env
     depends_on:
@@ -35,17 +35,16 @@ services:
       DJANGO_SETTINGS_MODULE: comments_app.settings
       RUN_MAIN: "true"
       WAIT_FOR_REDIS: "true"
-      # POSTGRES_DB: comments_db
-      # POSTGRES_USER: user
-      # POSTGRES_PASSWORD: pass
-      # POSTGRES_HOST: db
-      # POSTGRES_PORT: 5432
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL} # redis://redis:6379/0
+      POSTGRES_DB: comments_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      REDIS_URL: redis://redis:6379/0
 
   celery:
     build: ./backend
-    # container_name: comments_app_SPA_celery
+    container_name: comments_app_SPA_celery
     command: ["/app/entrypoint.sh", "celery", "-A", "comments_app", "worker", "-l", "info"]
     volumes:
       - ./backend:/app
@@ -54,31 +53,30 @@ services:
       - db
     environment:
       DJANGO_SETTINGS_MODULE: comments_app.settings
-      # RUN_CELERY: "true" was here before
+      # RUN_CELERY: "true"
       WAIT_FOR_REDIS: "true"
-      # POSTGRES_DB: comments_db
-      # POSTGRES_USER: user
-      # POSTGRES_PASSWORD: pass
-      # POSTGRES_HOST: db
-      # POSTGRES_PORT: 5432
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL} # redis://redis:6379/0
+      POSTGRES_DB: comments_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      REDIS_URL: redis://redis:6379/0
 
   frontend:
     build: ./frontend
-    # container_name: comments_app_SPA_frontend
-    command: npm run build && serve dist -s -l 80 # npm run dev
+    container_name: comments_app_SPA_frontend
+    command: npm run dev
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    # ports:
-    #   - "5173:5173"
+    ports:
+      - "5173:5173"
     depends_on:
       - backend
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - VITE_API_URL=${VITE_API_URL} # http://localhost:8000/api
-      - VITE_BACKEND_HOST=${VITE_BACKEND_HOST} # localhost
+      - VITE_API_URL=http://localhost:8000/api
+      - VITE_BACKEND_HOST=localhost
     env_file:
       - ./frontend/.env
 

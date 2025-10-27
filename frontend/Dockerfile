@@ -5,16 +5,14 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install
+RUN npm install jquery
 
 COPY . .
 
-RUN npm run build
+EXPOSE 5173
 
-RUN npm install -g serve
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
-EXPOSE 80
-
-CMD ["serve", "dist", "-s", "-l", "80"] 
 
 # FROM node:18
 
@@ -23,10 +21,13 @@ CMD ["serve", "dist", "-s", "-l", "80"]
 # COPY package*.json ./
 
 # RUN npm install
-# RUN npm install jquery
 
 # COPY . .
 
-# EXPOSE 5173
+# RUN npm run build
 
-# CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# RUN npm install -g serve
+
+# EXPOSE 80
+
+# CMD ["serve", "dist", "-s", "-l", "80"] 
