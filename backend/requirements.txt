@@ -15,3 +15,4 @@ django-cors-headers==4.4.0
 daphne==4.1.2
 autobahn==23.6.2
 whitenoise==6.6.0
+setuptools>=68.0.0

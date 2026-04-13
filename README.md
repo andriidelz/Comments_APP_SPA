@@ -21,7 +21,7 @@ This is a test task for a comments system SPA.
 ## Setup
 
 1. Install Docker.
-2. Run `docker-compose up --build`.
+2. Run `docker compose up --build`.
 3. Backend at <http://localhost:8000/admin/>
 4. Frontend at <http://localhost:5173/>
 5. Migrate DB: `docker exec -it backend python manage.py migrate`
@@ -30,7 +30,7 @@ This is a test task for a comments system SPA.
 
 ## Create Superuser
 
-docker-compose exec backend python manage.py createsuperuser:
+`docker compose exec backend python manage.py createsuperuser` :
 
 - username
 - e-mail
@@ -40,9 +40,9 @@ docker-compose exec backend python manage.py createsuperuser:
 
 They are done automatically but there are few commands below anyway:
 
-- docker-compose exec backend python manage.py migrate
-- docker-compose exec backend python manage.py shell
-- docker-compose exec backend python manage.py makemigrations
+- docker compose exec backend python manage.py migrate
+- docker compose exec backend python manage.py shell
+- docker compose exec backend python manage.py makemigrations
 
 ## Token
 

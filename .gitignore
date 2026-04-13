@@ -3,10 +3,12 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+pip
 .Python
 env/
 venv/
 .venv/
+pyvenv.cfg
 pip-log.txt
 pip-delete-this-directory.txt
 *.egg-info/
@@ -36,3 +38,10 @@ node_modules/
 dist/
 package-lock.json
 staticfiles/
+source/
+.DS_Store
+# Django
+backend/staticfiles/
+backend/media/
+backend/__pycache__/
+backend/**/__pycache__/
