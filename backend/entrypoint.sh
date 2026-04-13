@@ -1,18 +1,17 @@
 #!/bin/sh
 set -e
 
-echo "📡 Waiting for PostgreSQL..."
-until pg_isready -h "$POSTGRES_HOST" -p "$POSTGRES_PORT" -U "$POSTGRES_USER" > /dev/null 2>&1; do
-  sleep 1
-done
-
-echo "✅ PostgreSQL is ready."
+if [ -n "$POSTGRES_HOST" ]; then
+  echo "📡 Waiting for PostgreSQL..."
+  until pg_isready -h "$POSTGRES_HOST" -p "${POSTGRES_PORT:-5432}" -U "$POSTGRES_USER" > /dev/null 2>&1; do
+    sleep 1
+  done
+  echo "✅ PostgreSQL is ready."
+fi
 
 if [ "$RUN_MAIN" = "true" ]; then
-  echo "⚙️ Running migrations (only once)..."
-  python manage.py makemigrations --noinput
+  echo "⚙️ Running migrations..."
   python manage.py migrate --noinput
-
   echo "🧹 Collecting static files..."
   python manage.py collectstatic --noinput
 fi
