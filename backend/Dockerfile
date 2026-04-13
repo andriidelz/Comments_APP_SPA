@@ -25,4 +25,4 @@ RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-# CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "comments_app.asgi:application"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "10000", "comments_app.asgi:application"]
