@@ -19,7 +19,11 @@ export const connectWS = (proxy) => {
 
   const API_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '');
   let wsUrl = API_URL.replace('/api','').replace(/^http/, 'ws') + `/ws/comments/?token=${token}`;
-  if (location.protocol === 'https:') wsUrl = wsUrl.replace(/^ws/, 'wss');
+  if (location.protocol === 'https:' && wsUrl.startsWith('ws:')) {
+    wsUrl = wsUrl.replace(/^ws:/, 'wss:');
+  }
+
+  console.log("Connecting to WebSocket:", wsUrl);
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => console.log("WebSocket connected!");
