@@ -73,3 +73,8 @@ Open db_schema.mwb in MySQL Workbench.
 ## Self-Check
 
 Clone repo, follow setup—app should run from scratch.
+
+## Deployed
+
+<https://comments-app-qmcm.onrender.com/>
+<https://comments-app-spa-5lcp.onrender.com/>

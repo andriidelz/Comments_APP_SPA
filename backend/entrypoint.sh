@@ -13,6 +13,20 @@ if [ "$RUN_MAIN" = "true" ]; then
   echo "⚙️ Running migrations..."
   python manage.py migrate --noinput
 
+  echo "🧑‍💼 Creating default user (user / supersecret) if not exists..."
+    python manage.py shell -c "
+from django.contrib.auth.models import User
+if not User.objects.filter(username='user').exists():
+    User.objects.create_user(
+        username='user',
+        password='supersecret',
+        is_active=True,
+        is_staff=True
+    )
+    print('✅ Default user \"user\" created successfully!')
+else:
+    print('ℹ️  User \"user\" already exists')
+
   echo "🧹 Collecting static files..."
   python manage.py collectstatic --noinput
 fi
