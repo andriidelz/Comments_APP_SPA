@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 
+import urllib
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "super-secret-key")
@@ -129,11 +131,18 @@ CACHES = {
 CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://redis:6379/0")
 
+redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+parsed = urllib.parse.urlparse(redis_url)
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis', 6379)],
+            "hosts": [{
+                "host": parsed.hostname,
+                "port": parsed.port or 6379,
+                "password": parsed.password,
+            }],
         },
     },
 }
