@@ -12,9 +12,16 @@ fi
 if [ "$RUN_MAIN" = "true" ]; then
   echo "⚙️ Running migrations..."
   python manage.py migrate --noinput
+
   echo "🧹 Collecting static files..."
   python manage.py collectstatic --noinput
 fi
+
+echo "🚀 Starting ASGI server with Daphne..."
+exec daphne \
+  --bind 0.0.0.0 \
+  --port ${PORT:-8000} \
+  comments_app.asgi:application
 
 exec "$@"
 
